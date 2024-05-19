@@ -3,11 +3,12 @@ import React from 'react';
 type PropsButton = {
     title: string
     onclick: () => void
+    disabled?: boolean
 }
 
-export const Button = ({onclick, title}: PropsButton) => {
+export const Button = ({onclick, title, disabled}: PropsButton) => {
     return (
-        <button onClick={onclick}>{title}</button>
+        <button disabled={disabled} onClick={onclick}>{title}</button>
     );
 };
 
