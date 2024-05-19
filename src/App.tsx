@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import './App.css';
 import {v1} from "uuid";
-import exp from "constants";
 import {Tasks} from "./Tasks";
 
 export type TaskType = {
@@ -29,6 +28,8 @@ function App() {
     if (filter === 'completed') {
         copyFilterArr = tasks.filter(el => el.isChecked)
     }
+
+    console.log('hello')
     const handelFilter = (filter: FilterType) => {
         setFilter(filter)
     }
