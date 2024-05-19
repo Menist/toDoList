@@ -28,8 +28,6 @@ function App() {
     if (filter === 'completed') {
         copyFilterArr = tasks.filter(el => el.isChecked)
     }
-
-    console.log('hello')
     const handelFilter = (filter: FilterType) => {
         setFilter(filter)
     }
