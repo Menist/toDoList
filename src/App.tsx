@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import './App.css';
 import {v1} from "uuid";
 import {Tasks} from "./Tasks";
@@ -39,7 +39,11 @@ function App() {
     }
     const handelAddTask = (title: string) => {
         const task = {isChecked: false, title, id: v1()}
-        setTask([task,...tasks])
+        setTask([task, ...tasks])
+    }
+    const isCheckedHandler = (e: ChangeEvent<HTMLInputElement>, id: string) => {
+        const events = e.currentTarget.checked
+        setTask(tasks.map(el => el.id === id ? {...el, isChecked: events} : el))
     }
 
     return (
@@ -48,6 +52,7 @@ function App() {
                    removeTask={removeTask}
                    handelFilter={handelFilter}
                    handelAddTask={handelAddTask}
+                   isCheckedHandler={isCheckedHandler}
             />
         </div>
     );

@@ -7,22 +7,32 @@ type PropsType = {
     removeTask: (elId: string) => void
     handelAddTask: (title: string) => void
     handelFilter: (filter: FilterType) => void
+    isCheckedHandler: (e: ChangeEvent<HTMLInputElement>, id: string) => void
 }
-export const Tasks = ({tasks, removeTask, handelFilter, handelAddTask}: PropsType) => {
+export const Tasks = ({tasks, removeTask, handelFilter, handelAddTask, isCheckedHandler}: PropsType) => {
 
     const [inputValue, setInputValue] = useState('')
-
+    const isDisabled = inputValue.length === 0 || inputValue.length > 20
     const handelInput = (e: ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.currentTarget.value)
     }
-
+    const addTaskHandler = () => {
+        handelAddTask(inputValue)
+        setInputValue('')
+    }
+    const filterTaskHandlerAll = () => handelFilter('all');
+    const filterTaskHandlerActive = () => handelFilter('active');
+    const filterTaskHandlerCompleted = () => handelFilter('completed');
     const ulArr = tasks.length === 0 ?
         <span>No</span>
         : (<ul>{
             tasks.map((el) => {
+                const removeTaskHandler = () => removeTask(el.id)
+                const checkedHandler = (e: ChangeEvent<HTMLInputElement>) => isCheckedHandler(e, el.id)
+
                 return (
-                    <li key={el.id}><input type="checkbox" checked={el.isChecked}/> <span>{el.title}</span>
-                        <Button title={'x'} onclick={() => removeTask(el.id)}/>
+                    <li key={el.id}><input onChange={checkedHandler} type="checkbox" checked={el.isChecked}/> <span>{el.title}</span>
+                        <Button title={'x'} onclick={removeTaskHandler}/>
                     </li>
                 )
             })
@@ -35,20 +45,17 @@ export const Tasks = ({tasks, removeTask, handelFilter, handelAddTask}: PropsTyp
                 <input value={inputValue}
                        onChange={handelInput}
                        onKeyUp={(e) => {
-                           if (e.key === 'Enter') {
+                           if (e.key === 'Enter' && inputValue) {
                                handelAddTask(inputValue)
                                setInputValue('')
                            }
                        }}
                 />
-
                 <Button
-                    disabled={inputValue.length === 0 || inputValue.length > 20}
+                    disabled={isDisabled}
                     title={'+'}
-                    onclick={() => {
-                        handelAddTask(inputValue)
-                        setInputValue('')
-                    }}/>
+                    onclick={addTaskHandler}/>
+
                 {inputValue.length > 10 && inputValue.length <= 20 &&
                     <div className={'warning'}>Length more than 10 characters is prohibited!</div>}
                 {inputValue.length > 20 && <div className={'error'}>Messaged too long!</div>}
@@ -56,10 +63,9 @@ export const Tasks = ({tasks, removeTask, handelFilter, handelAddTask}: PropsTyp
             </div>
             {ulArr}
             <div>
-                <Button title={'All'} onclick={() => handelFilter('all')}/>
-                <Button title={'Active'} onclick={() => handelFilter('active')}/>
-                <Button title={'Completed'} onclick={() => handelFilter('completed')}/>
-
+                <Button title={'All'} onclick={filterTaskHandlerAll}/>
+                <Button title={'Active'} onclick={filterTaskHandlerActive}/>
+                <Button title={'Completed'} onclick={filterTaskHandlerCompleted}/>
             </div>
         </div>
     );
